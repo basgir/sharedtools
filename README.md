@@ -2,7 +2,7 @@
 Shared libraries
 
 ## Installation 
-pip install git+https://github.com/swissborgcanada/sharedtools
+`pip install git+https://github.com/swissborgcanada/sharedtools`
 
 
 # How to use
