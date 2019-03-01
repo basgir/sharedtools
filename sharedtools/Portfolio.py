@@ -3,11 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 import pickle
-from os import listdir
-from scipy.interpolate import griddata
-from mpl_toolkits.mplot3d import Axes3D
-from multiprocessing import Pool
-% matplotlib inline
 # from sharedtools.jupyter import PerformanceReport #from stats_html.py
 
 class Portfolio(object):
