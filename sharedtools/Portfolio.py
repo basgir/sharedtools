@@ -223,7 +223,7 @@ class Portfolio(object):
             
         else:
             #trades
-            total_trades=len(self.trade)
+            total_trades=len(self.trades)
             total_closed=len(self.tradesum)
             r_pnl=self.portfolio.Realized_Pnl.sum()+self.tradesum.Realized_Pnl.sum()
             u_pnl=self.portfolio.Unrealized_Pnl.sum()
