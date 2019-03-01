@@ -7,6 +7,7 @@ from os import listdir
 from scipy.interpolate import griddata
 from mpl_toolkits.mplot3d import Axes3D
 from multiprocessing import Pool
+% matplotlib inline
 # from sharedtools.jupyter import PerformanceReport #from stats_html.py
 
 class Portfolio(object):
@@ -284,7 +285,6 @@ class Portfolio(object):
             print(f'Total Return: {round(total_ret*100,2)}% across {duration} years')
             print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann}')
             print(f'Max Drawdown: {round(mdd*100,2)} %')
-            %matplotlib inline
             plt.plot(self.historical.NAV, linewidth=0.8)
             plt.show()
         
