@@ -235,7 +235,7 @@ class Portfolio(object):
             p_loss=len([x<0 for x in pnls])/len(pnls)
             total_commission=self.trades.Commission_Expense.sum()
             #time series
-            returns=self.historical.NAV.diff(1).tolist()[1:]
+            returns=self.historical.NAV.pcg_change().tolist()[1:]
             total_ret=self.historical.NAV.iloc[-1]/self.historical.NAV.iloc[0]-1
             duration=(self.historical.Datetime.iloc[-1] - 
                       self.historical.Datetime.iloc[1])/datetime.timedelta(days=1)/365
