@@ -61,6 +61,7 @@ class Portfolio(object):
         self.historical.loc[0]=[np.nan,0,self.cash,0,0,self.nav,0,0]
         self.statistics={}
         self.others={}
+
         
     def trade(self,date,price,ticker,quantity,margin=100):
         
@@ -241,6 +242,7 @@ class Portfolio(object):
             CAGR= ((self.nav/self.initial_capital)**(1/duration))-1
             std_ann=round(np.std(returns)*np.sqrt(annualized_ratio),2)
             mdd=self.historical.Drawdown.min()
+            SR=CAGR/std_ann
             
             self.statistics['Trades']={}
             self.statistics['Trades']['Total Trades']=total_trades
@@ -259,15 +261,15 @@ class Portfolio(object):
             self.statistics['Time Series']['CAGR']=CAGR
             self.statistics['Time Series']['STD ANN']=std_ann
             self.statistics['Time Series']['Max Drawdown']=mdd
+            self.statistics['Time Series']['Sharpe Ratio']=SR
             
             if self.benchmark:
                 total_ret_bm=self.benchmark.Benchmark.iloc[-1]/self.benchmark.Benchmark.iloc[0]-1
                 IR=(total_ret-total_ret_bm)/std_ann
-                SR=CAGR/std_ann
                 self.statistics['Benchmark']={}
                 self.statistics['Benchmark']['Total Return']=total_ret_bm
                 self.statistics['Benchmark']['Information Ratio']=IR
-                self.statistics['Benchmark']['Sharpe Ratio']=SR
+                
          
         
             print('- Trade Analysis:')
@@ -279,7 +281,7 @@ class Portfolio(object):
             print('- Time Series Analysis:')
             print(f'Starting NAV: {self.initial_capital} Ending NAV: {self.nav}')
             print(f'Total Return: {round(total_ret*100,2)}% across {duration} years')
-            print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann}')
+            print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann} Sharpe Ratio: {SR}')
             print(f'Max Drawdown: {round(mdd*100,2)} %')
             plt.plot(self.historical.NAV, linewidth=0.8)
             plt.show()
@@ -288,7 +290,7 @@ class Portfolio(object):
     def get_position(self,ticker):
         
         '''
-        Fetch the curernt position of the asset.
+        Fetch the current position of the asset.
         
         :param ticker: the asset to be fetched
         :type ticker: str
@@ -345,9 +347,6 @@ class Portfolio(object):
         self.historical=savedict['Historical']
         self.statistics=savedict['Statistics']
         self.others=savedict['Others']
-    
-    
-    
     
     
     
