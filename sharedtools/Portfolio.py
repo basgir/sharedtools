@@ -194,7 +194,16 @@ class Portfolio(object):
         self.nav=pos_value+self.cash
         npos=len(self.portfolio)
         dd=min(0,(self.nav-self.historical.NAV.max())/self.historical.NAV.max())
-        self.historical.loc[len(self.historical)]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
+#         self.historical.loc[len(self.historical)]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
+        index=len(self.historical)
+        self.historical.at[index,'Datetime']=date
+        self.historical.at[index,'Position_Value']=pos_value
+        self.historical.at[index,'Cash']=self.cash
+        self.historical.at[index,'Realized_Pnl']=r_pnl
+        self.historical.at[index,'Unrealized_Pnl']=u_pnl
+        self.historical.at[index,'NAV']=self.nav
+        self.historical.at[index,'Number_Positions']=npos
+        self.historical.at[index,'Drawdown']=dd
     
     def calculate_stats(self,annualized_ratio,form='dict'):#per simulation
         
