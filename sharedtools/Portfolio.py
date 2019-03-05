@@ -243,11 +243,14 @@ class Portfolio(object):
             r_pnl=self.portfolio.Realized_Pnl.sum()+self.tradesum.Realized_Pnl.sum()
             u_pnl=self.portfolio.Unrealized_Pnl.sum()
             total_pnl=r_pnl+u_pnl
-            avg_trade_pnl=total_pnl/total_trades
             pnls=self.tradesum.Realized_Pnl.tolist()+self.portfolio.Realized_Pnl.tolist()
-            p_win=len([x for x in pnls if x>=0])/len(pnls)
-            p_loss=len([x for x in pnls if x<0])/len(pnls)
             total_commission=self.trades.Commission_Expense.sum()
+            try:
+                avg_trade_pnl=total_pnl/total_trades#
+                p_win=len([x for x in pnls if x>=0])/len(pnls)#
+                p_loss=len([x for x in pnls if x<0])/len(pnls)#
+            except:
+                avg_trade_pnl,p_win,p_loss=0,0,0
             #time series
             returns=self.historical.NAV.pct_change().tolist()[1:]
             total_ret=self.historical.NAV.iloc[-1]/self.historical.NAV.iloc[0]-1
