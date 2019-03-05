@@ -186,7 +186,7 @@ class Portfolio(object):
     
         '''
         
-        self.historical_portfolio=self.historical_portfolio.append(self.portfolio)
+        self.historical_portfolio=self.historical_portfolio.append(self.portfolio).reset_index()
         
         pos_value=self.portfolio.Position_Value.sum()
         r_pnl=self.portfolio.Realized_Pnl.sum()+self.tradesum.Realized_Pnl.sum()
