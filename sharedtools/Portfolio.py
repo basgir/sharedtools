@@ -163,11 +163,16 @@ class Portfolio(object):
         :type ticker: str
         
         '''
-        
-        quantity_now=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Quantity)
-        avg_open=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Avg_Open_Price)
-        self.portfolio.loc[self.portfolio.Ticker==ticker,
-                           ['Last_Price','Position_Value','Unrealized_Pnl']]=price,quantity_now*price,-quantity_now*(avg_open-price)
+        index=self.portfolio.index[self.portfolio.Ticker==ticker][0]
+        quantity_now=self.portfolio.at[index,'Quantity']
+        avg_open=self.portfolio.at[index,'Avg_Open_Price']
+        self.portfolio.at[index,'Last_Price']=price
+        self.portfolio.at[index,'Position_Value']=quantity_now*price
+        self.portfolio.at[index,'Unrealized_Pnl']=-quantity_now*(avg_open-price)
+#         quantity_now=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Quantity)
+#         avg_open=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Avg_Open_Price)
+#         self.portfolio.loc[self.portfolio.Ticker==ticker,
+#                            ['Last_Price','Position_Value','Unrealized_Pnl']]=price,quantity_now*price,-quantity_now*(avg_open-price)
         
     
     def save_historical(self,date):#per day
