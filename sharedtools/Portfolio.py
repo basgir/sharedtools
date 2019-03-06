@@ -166,9 +166,9 @@ class Portfolio(object):
         index=self.portfolio.index[self.portfolio.Ticker==ticker][0]
         quantity_now=self.portfolio.at[index,'Quantity']
         avg_open=self.portfolio.at[index,'Avg_Open_Price']
-        self.portfolio.at[index,'Last_Price']=price
-        self.portfolio.at[index,'Position_Value']=quantity_now*price
-        self.portfolio.at[index,'Unrealized_Pnl']=-quantity_now*(avg_open-price)
+        self.portfolio.at[index,['Last_Price','Position_Value','Unrealized_Pnl']]=[price,
+                                                                                   quantity_now*price,
+                                                                                   -quantity_now*(avg_open-price)]
 #         quantity_now=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Quantity)
 #         avg_open=float(self.portfolio.loc[self.portfolio.Ticker==ticker].Avg_Open_Price)
 #         self.portfolio.loc[self.portfolio.Ticker==ticker,
@@ -196,14 +196,10 @@ class Portfolio(object):
         dd=min(0,(self.nav-self.historical.NAV.max())/self.historical.NAV.max())
 #         self.historical.loc[len(self.historical)]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
         index=len(self.historical)
-        self.historical.at[index,'Datetime']=date
-        self.historical.at[index,'Position_Value']=pos_value
-        self.historical.at[index,'Cash']=self.cash
-        self.historical.at[index,'Realized_Pnl']=r_pnl
-        self.historical.at[index,'Unrealized_Pnl']=u_pnl
-        self.historical.at[index,'NAV']=self.nav
-        self.historical.at[index,'Number_Positions']=npos
-        self.historical.at[index,'Drawdown']=dd
+        self.historical.at[index,['Datetime','Position_Value','Cash',
+                                 'Realized_Pnl','Unrealized_Pnl','NAV',
+                                 'Number_Positions','Drawdown']]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
+        
     
     def calculate_stats(self,annualized_ratio,form='dict'):#per simulation
         
