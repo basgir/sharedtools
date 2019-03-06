@@ -30,10 +30,9 @@ class Portfolio(object):
         :type commission_rate: float
         :param portfolio_name: name of portfolio
         :type portfolio_name: str
-        :param benchmark: a dataframe that stores specific benchmark for statistics calculation.\
-                            Columns must be in form of ['Datetime','Benchmark'].\
+        :param benchmark: a list of benchmark time series values with the same timeframe\
                             Default is None.
-        :type benchmark: dataframe
+        :type benchmark: a list, or an array
         :param others: other miscellaneous data
         :type portfolio_name: dict
     
@@ -45,7 +44,7 @@ class Portfolio(object):
         self.cash = initial_capital
         self.portfolio_name=portfolio_name
         self.commission_rate = commission_rate
-        self.benchmark=benchmark #df, Datetime,Benchmark
+        self.benchmark=benchmark
         self.others=others
         
         #dataframes
@@ -194,12 +193,12 @@ class Portfolio(object):
         self.nav=pos_value+self.cash
         npos=len(self.portfolio)
         dd=min(0,(self.nav-self.historical.NAV.max())/self.historical.NAV.max())
-#         self.historical.loc[len(self.historical)]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
+        
         index=len(self.historical)
         self.historical.at[index,['Datetime','Position_Value','Cash',
                                  'Realized_Pnl','Unrealized_Pnl','NAV',
-                                 'Number_Positions','Drawdown']]=[date,pos_value,self.cash,r_pnl,u_pnl,self.nav,npos,dd]
-        
+                                 'Number_Positions','Drawdown']]=[date,pos_value,self.cash,r_pnl,
+                                                                  u_pnl,self.nav,npos,dd]
     
     def calculate_stats(self,annualized_ratio,form='dict'):#per simulation
         
@@ -222,7 +221,7 @@ class Portfolio(object):
         
 
         if form=='html':
-            if self.benchmark:
+            if self.benchmark:# to be updated with html object, benchmark to be a list/array
                 combine=pd.merge(self.benchmark,self.historical[['Datetime','NAV']],on='Datetime',how='right')
                 combine.rename(columns={'NAV':'Curve'}, inplace=True)
                 combine.to_csv(f'./BenchmarkAnalysis_{self.portfolio_name}.csv')
@@ -248,7 +247,7 @@ class Portfolio(object):
             except:
                 avg_trade_pnl,p_win,p_loss=0,0,0
             #time series
-            returns=self.historical.NAV.pct_change().tolist()[1:]
+            returns=self.historical.NAV.pcg_change().tolist()[1:]
             total_ret=self.historical.NAV.iloc[-1]/self.historical.NAV.iloc[0]-1
             duration=(self.historical.Datetime.iloc[-1] - 
                       self.historical.Datetime.iloc[1])/datetime.timedelta(days=1)/365
@@ -277,7 +276,7 @@ class Portfolio(object):
             self.statistics['Time Series']['Sharpe Ratio']=SR
             
             if self.benchmark:
-                total_ret_bm=self.benchmark.Benchmark.iloc[-1]/self.benchmark.Benchmark.iloc[0]-1
+                total_ret_bm=self.benchmark[0]/self.benchmark[-1]-1
                 IR=(total_ret-total_ret_bm)/std_ann
                 self.statistics['Benchmark']={}
                 self.statistics['Benchmark']['Total Return']=total_ret_bm
@@ -360,6 +359,10 @@ class Portfolio(object):
         self.historical=savedict['Historical']
         self.statistics=savedict['Statistics']
         self.others=savedict['Others']
+    
+    
+    
+    
     
     
     
