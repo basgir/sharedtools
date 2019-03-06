@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 import pickle
-# from sharedtools.jupyter import PerformanceReport #from stats_html.py
+from sharedtools.PerformanceHTML import PerformanceReport
 
 class Portfolio(object):
     def __init__(self, initial_capital, commission_rate, portfolio_name, benchmark=None, others=None):
