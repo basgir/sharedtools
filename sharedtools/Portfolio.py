@@ -247,7 +247,7 @@ class Portfolio(object):
             except:
                 avg_trade_pnl,p_win,p_loss=0,0,0
             #time series
-            returns=self.historical.NAV.pcg_change().tolist()[1:]
+            returns=self.historical.NAV.pct_change().tolist()[1:]
             total_ret=self.historical.NAV.iloc[-1]/self.historical.NAV.iloc[0]-1
             duration=(self.historical.Datetime.iloc[-1] - 
                       self.historical.Datetime.iloc[1])/datetime.timedelta(days=1)/365
@@ -359,6 +359,10 @@ class Portfolio(object):
         self.historical=savedict['Historical']
         self.statistics=savedict['Statistics']
         self.others=savedict['Others']
+    
+    
+    
+    
     
     
     
