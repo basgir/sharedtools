@@ -30,7 +30,8 @@ class Portfolio(object):
         :type commission_rate: float
         :param portfolio_name: name of portfolio
         :type portfolio_name: str
-        :param benchmark: a list of benchmark time series values with the same timeframe\
+        :param benchmark: a dataframe consisting benchmark time series. \
+                        Dataframe columns should be set to 'Datetime' and 'Benchmark'.\
                             Default is None.
         :type benchmark: a list, or an array
         :param others: other miscellaneous data
@@ -221,9 +222,9 @@ class Portfolio(object):
         
 
         if form=='html':
-            if self.benchmark:# to be updated with html object, benchmark to be a list/array
+            if self.benchmark is not None:# to be updated with html object, benchmark to be a list/array
                 combine=pd.merge(self.benchmark,self.historical[['Datetime','NAV']],on='Datetime',how='right')
-                combine.rename(columns={'NAV':'Curve'}, inplace=True)
+                combine.rename(columns={'NAV':'Curve','Datetime':'date'}, inplace=True)
                 combine.to_csv(f'./BenchmarkAnalysis_{self.portfolio_name}.csv')
                 report = PerformanceReport(f'./BenchmarkAnalysis_{self.portfolio_name}.csv')
                 report.generate_html_report()
@@ -359,14 +360,6 @@ class Portfolio(object):
         self.historical=savedict['Historical']
         self.statistics=savedict['Statistics']
         self.others=savedict['Others']
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
