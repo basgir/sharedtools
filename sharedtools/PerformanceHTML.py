@@ -27,7 +27,7 @@ class PerformanceReport:
             self.ratio_curve = self.equity_curve/self.benchmark_curve
  
     def generate_html(self):
-        env = Environment(loader=FileSystemLoader('.'))
+        env = Environment(loader=FileSystemLoader('./'))
         template = env.get_template("templates.html")
         perf_chart = self.plot_performance_chart()
         drawdown_chart = self.plot_drawdown_chart()
