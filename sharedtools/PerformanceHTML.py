@@ -5,6 +5,8 @@ import plotly
 import plotly.graph_objs as go
 import ffn
 from jinja2 import Environment, FileSystemLoader
+from jinja2 import Template
+
 
 
 class PerformanceReport:
@@ -27,8 +29,10 @@ class PerformanceReport:
             self.ratio_curve = self.equity_curve/self.benchmark_curve
  
     def generate_html(self):
-        env = Environment(loader=FileSystemLoader('./'))
-        template = env.get_template("templates.html")
+#         env = Environment(loader=FileSystemLoader('./'))
+#         template = env.get_template("templates.html")
+        with open('./templates.html') as file_:
+            template = Template(file_.read())
         perf_chart = self.plot_performance_chart()
         drawdown_chart = self.plot_drawdown_chart()
         ratio_chart = self.plot_ratio_chart()
