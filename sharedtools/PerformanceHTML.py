@@ -31,7 +31,7 @@ class PerformanceReport:
     def generate_html(self):
 #         env = Environment(loader=FileSystemLoader('./'))
 #         template = env.get_template("templates.html")
-        with open('sharedtools/sharedtools/templates.html') as file_:
+        with open('./templates.html') as file_:
             template = Template(file_.read())
         perf_chart = self.plot_performance_chart()
         drawdown_chart = self.plot_drawdown_chart()
