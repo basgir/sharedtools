@@ -276,7 +276,7 @@ class Portfolio(object):
             self.statistics['Time Series']['Max Drawdown']=mdd
             self.statistics['Time Series']['Sharpe Ratio']=SR
             
-            if self.benchmark:
+            if self.benchmark is not None:
                 total_ret_bm=self.benchmark[0]/self.benchmark[-1]-1
                 IR=(total_ret-total_ret_bm)/std_ann
                 self.statistics['Benchmark']={}
