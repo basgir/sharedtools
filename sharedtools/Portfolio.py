@@ -277,7 +277,7 @@ class Portfolio(object):
             self.statistics['Time Series']['Sharpe Ratio']=SR
             
             if self.benchmark is not None:
-                total_ret_bm=self.benchmark.Benchmark[-1]/self.benchmark.Benchmark[0]-1
+                total_ret_bm=self.benchmark.Benchmark.iloc[-1]/self.benchmark.Benchmark[0]-1
                 IR=(total_ret-total_ret_bm)/std_ann
                 self.statistics['Benchmark']={}
                 self.statistics['Benchmark']['Total Return']=total_ret_bm
