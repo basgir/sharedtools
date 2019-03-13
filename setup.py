@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='sharedtools',
-    version='0.138',
+    version='0.139',
     author="SB Ca",
     author_email="canada@swissborg.com",
     description="Shared tools for jupyter notebook",
