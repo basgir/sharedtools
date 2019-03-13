@@ -235,9 +235,7 @@ class Portfolio(object):
         dd=min(0,(self.nav-self.historical.NAV.max())/self.historical.NAV.max())
         
         index=len(self.historical)
-        self.historical.at[index,['Datetime','Position_Value','Cash',
-                                 'Realized_Pnl','Unrealized_Pnl','NAV',
-                                 'Number_Positions','Drawdown']]=[date,pos_value,self.cash,r_pnl,
+        self.historical.at[index,self.historical.columns.tolist()]=[date,pos_value,self.cash,r_pnl,
                                                                   u_pnl,self.nav,npos,dd]
     
     def calculate_stats(self,annualized_ratio,form='dict'):#per simulation
