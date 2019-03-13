@@ -86,9 +86,14 @@ class Portfolio(object):
         if ticker not in self.portfolio.Ticker.values:#new open
             comm = float(quantity*price*self.commission_rate)/10000
             self.cash -= price*quantity+comm
-            self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
-            self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity,price,quantity*price,price,
-                                                     quantity*price,0,0,np.nan]
+            self.trades.at[len(self.trades),
+                           self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Open']
+#             self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
+            self.portfolio.at[len(self.portfolio),
+                             self.portfolio.columns.tolist()]=[date,ticker,quantity,price,
+                                                               quantity*price,price,quantity*price,0,0,np.nan]
+#             self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity,price,quantity*price,price,
+#                                                      quantity*price,0,0,np.nan]
         else:#update
             pf_last=self.portfolio.loc[self.portfolio.Ticker==ticker]
             quantity_last=float(pf_last.Quantity)
@@ -104,50 +109,84 @@ class Portfolio(object):
                 r_pnl=(quantity_mid-quantity_last)*(avg_open-price)-comm
                 
                 
-                self.trades.loc[len(self.trades)]=[date,ticker,quantity_mid-quantity_last,price,comm,margin,'Close']
-                self.tradesum.loc[len(self.tradesum)]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
-                                                       float(pf_last.Outlay)+(quantity_mid-quantity_last)*price,
-                                                       r_pnl_last+r_pnl,date,np.nan]
+                self.trades.at[len(self.trades),
+                               self.trades.columns.tolist()]=[date,ticker,quantity_mid-quantity_last,price,comm,margin,'Close']
+#                 self.trades.loc[len(self.trades)]=[date,ticker,quantity_mid-quantity_last,price,comm,margin,'Close']
+                self.tradesum.at[len(self.tradesum),
+                                 self.tradesum.columns.tolist()]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
+                                                                       float(pf_last.Outlay)+(quantity_mid-quantity_last)*price,
+                                                                       r_pnl_last+r_pnl,date,np.nan]
+#                 self.tradesum.loc[len(self.tradesum)]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
+#                                                        float(pf_last.Outlay)+(quantity_mid-quantity_last)*price,
+#                                                        r_pnl_last+r_pnl,date,np.nan]
                 self.portfolio=self.portfolio[self.portfolio.Ticker!=ticker].reset_index(drop=True)
                 
                 #open new
                 quantity_rest=quantity_now-quantity_mid
                 comm = abs(float(quantity_rest*price*self.commission_rate)/10000)
                 self.cash -= price*quantity_rest+comm
-                self.trades.loc[len(self.trades)]=[date,ticker,quantity_rest,price,comm,margin,'Open']
-                self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity_rest,price,quantity_rest*price,
-                                                         price,quantity_rest*price,0,0,np.nan]
+                self.trades.at[len(self.trades),
+                               self.trades.columns.tolist()]=[date,ticker,quantity_rest,price,comm,margin,'Open']
+#                 self.trades.loc[len(self.trades)]=[date,ticker,quantity_rest,price,comm,margin,'Open']
+                self.portfolio.at[len(self.portfolio),
+                                  self.portfolio.columns.tolist()]=[date,ticker,quantity_rest,price,quantity_rest*price,
+                                                                    price,quantity_rest*price,0,0,np.nan]
+#                 self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity_rest,price,quantity_rest*price,
+#                                                          price,quantity_rest*price,0,0,np.nan]
             elif abs(quantity_now)<abs(quantity_last):#close
                 comm = abs(float((quantity_now-quantity_last)*price*self.commission_rate)/10000)
                 self.cash -= price*quantity+comm
                 r_pnl=quantity*(avg_open-price)-comm
                 if quantity_now==0:#full close
-                    self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Close']
-                    self.tradesum.loc[len(self.tradesum)]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
+                    self.trades.at[len(self.trades),
+                                   self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Close']
+#                     self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Close']
+                    self.tradesum.at[len(self.tradesum),
+                                     self.tradesum.columns.tolist()]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
                                                            float(pf_last.Outlay)+quantity*price,
                                                            r_pnl_last+r_pnl,date,np.nan]
+#                     self.tradesum.loc[len(self.tradesum)]=[pf_last.Open_Date.tolist()[0],ticker,avg_open,
+#                                                            float(pf_last.Outlay)+quantity*price,
+#                                                            r_pnl_last+r_pnl,date,np.nan]
                     self.portfolio=self.portfolio[self.portfolio.Ticker!=ticker].reset_index(drop=True)
                 
                 else:#partial close
                     u_pnl=-quantity_now*(avg_open-price)
-                    self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Close']
-                    self.portfolio.loc[self.portfolio.Ticker==ticker,
-                                       ['Quantity','Last_Price','Position_Value',
-                                        'Outlay','Realized_Pnl','Unrealized_Pnl']]=\
-                                       quantity_now,price,quantity_now*price,\
-                                       float(pf_last.Outlay)+quantity*price,r_pnl_last+r_pnl,u_pnl
+                    self.trades.at[len(self.trades),
+                                   self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Close']
+#                     self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Close']
+                    index=self.portfolio.index[self.portfolio.Ticker==ticker][0]
+                    self.portfolio.at[index,['Quantity','Last_Price','Position_Value',
+                                            'Outlay','Realized_Pnl','Unrealized_Pnl']]=[quantity_now,price,
+                                                                                        quantity_now*price,
+                                                                                        float(pf_last.Outlay)+quantity*price,
+                                                                                        r_pnl_last+r_pnl,u_pnl]
+#                     self.portfolio.loc[self.portfolio.Ticker==ticker,
+#                                        ['Quantity','Last_Price','Position_Value',
+#                                         'Outlay','Realized_Pnl','Unrealized_Pnl']]=\
+#                                        quantity_now,price,quantity_now*price,\
+#                                        float(pf_last.Outlay)+quantity*price,r_pnl_last+r_pnl,u_pnl
                     
             else:#further open
                 comm = abs(float(quantity*price*self.commission_rate)/10000)
                 self.cash -= price*quantity+comm
                 u_pnl=-quantity_last*(avg_open-price)
                 avg_open_new=(avg_open*quantity_last+quantity*price)/quantity_now
-                self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
-                self.portfolio.loc[self.portfolio.Ticker==ticker,
-                                       ['Quantity','Last_Price','Position_Value',
-                                        'Avg_Open_Price','Outlay','Unrealized_Pnl']]=\
-                                       quantity_now,price,quantity_now*price,\
-                                       avg_open_new,float(pf_last.Outlay)+quantity*price,u_pnl
+                self.trades.at[len(self.trades),
+                            self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Open']
+#                 self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
+                index=self.portfolio.index[self.portfolio.Ticker==ticker][0]
+                self.portfolio.at[index,['Quantity','Last_Price','Position_Value',
+                                        'Avg_Open_Price','Outlay','Unrealized_Pnl']]=[quantity_now,price,
+                                                                                      quantity_now*price,
+                                                                                      avg_open_new,
+                                                                                      float(pf_last.Outlay)+quantity*price,
+                                                                                      u_pnl]
+#                 self.portfolio.loc[self.portfolio.Ticker==ticker,
+#                                        ['Quantity','Last_Price','Position_Value',
+#                                         'Avg_Open_Price','Outlay','Unrealized_Pnl']]=\
+#                                        quantity_now,price,quantity_now*price,\
+#                                        avg_open_new,float(pf_last.Outlay)+quantity*price,u_pnl
                 
     
     def update_portfolio(self,date,ticker,price):#per ticker
