@@ -91,7 +91,7 @@ class Portfolio(object):
 #             self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
             self.portfolio.at[len(self.portfolio),
                              self.portfolio.columns.tolist()]=[date,ticker,quantity,price,
-                                                               quantity*price,price,quantity*price,0,0,np.nan]
+                                                               quantity*price,price,quantity*price,-comm,0,np.nan]
 #             self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity,price,quantity*price,price,
 #                                                      quantity*price,0,0,np.nan]
         else:#update
@@ -130,7 +130,7 @@ class Portfolio(object):
 #                 self.trades.loc[len(self.trades)]=[date,ticker,quantity_rest,price,comm,margin,'Open']
                 self.portfolio.at[len(self.portfolio),
                                   self.portfolio.columns.tolist()]=[date,ticker,quantity_rest,price,quantity_rest*price,
-                                                                    price,quantity_rest*price,0,0,np.nan]
+                                                                    price,quantity_rest*price,-comm,0,np.nan]
 #                 self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity_rest,price,quantity_rest*price,
 #                                                          price,quantity_rest*price,0,0,np.nan]
             elif abs(quantity_now)<abs(quantity_last):#close
@@ -177,11 +177,10 @@ class Portfolio(object):
 #                 self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Open']
                 index=self.portfolio.index[self.portfolio.Ticker==ticker][0]
                 self.portfolio.at[index,['Quantity','Last_Price','Position_Value',
-                                        'Avg_Open_Price','Outlay','Unrealized_Pnl']]=[quantity_now,price,
-                                                                                      quantity_now*price,
-                                                                                      avg_open_new,
-                                                                                      float(pf_last.Outlay)+quantity*price,
-                                                                                      u_pnl]
+                                        'Avg_Open_Price','Outlay','Realized_Pnl',
+                                         'Unrealized_Pnl']]=[quantity_now,price,quantity_now*price,avg_open_new,
+                                                             float(pf_last.Outlay)+quantity*price,
+                                                             r_pnl_last-comm,u_pnl]
 #                 self.portfolio.loc[self.portfolio.Ticker==ticker,
 #                                        ['Quantity','Last_Price','Position_Value',
 #                                         'Avg_Open_Price','Outlay','Unrealized_Pnl']]=\
