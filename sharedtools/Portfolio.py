@@ -84,7 +84,7 @@ class Portfolio(object):
         '''
         
         if ticker not in self.portfolio.Ticker.values:#new open
-            comm = float(quantity*price*self.commission_rate)/10000
+            comm = abs(float(quantity*price*self.commission_rate)/10000)
             self.cash -= price*quantity+comm
             self.trades.at[len(self.trades),
                            self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Open']
