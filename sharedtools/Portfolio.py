@@ -398,5 +398,20 @@ class Portfolio(object):
         self.others=savedict['Others']
     
     
-    
+    def output_excel(self,directory):
+        savedict= pickle.load(open(directory+".pkl","rb"))
+        info=pd.DataFrame.from_dict(savedict['Others'],orient='index')
+        info.loc['Portfolio Name']=savedict['Portfolio Name']
+        info.loc['Initial Capital']=savedict['Initial Capital']
+        info.loc['Commission Rate']=savedict['Commission Rate']
+        
+        stats=pd.DataFrame.from_dict(savedict['Statistics'],orient='index')
+
+        with pd.ExcelWriter(directory +'.xlsx') as writer:  
+            info.to_excel(writer, sheet_name='Portfolio Info')
+            stats.to_excel(writer, sheet_name='Statistics')
+            savedict['Historical'].to_excel(writer, sheet_name='Historical PnL')
+            savedict['Trade'].to_excel(writer, sheet_name='Trade')
+            savedict['Tradesum'].to_excel(writer, sheet_name='Trade Summary')
+            savedict['Historical Portfolio'].to_excel(writer, sheet_name='Historical Portfolio')
     
