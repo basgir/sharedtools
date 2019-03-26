@@ -7,7 +7,7 @@ from sharedtools.jupyter import Portfolio
 # How to use Portfolio
 
 ## Please first specify the directory of portfolio pickle file you want to investigate
-The directory is in format of *'../strategy_name/simulation_specifications/variable_specifications'*.<br>
+In the Jupyter terminal, directory is in format of *'../strategy_name/simulation_specifications/variable_specifications'*.<br>
 ```python
 directory='../RSI/Pickle_day_longshort2/w0_p5'
 ```
