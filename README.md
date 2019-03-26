@@ -7,9 +7,10 @@ from sharedtools.jupyter import Portfolio
 # How to use Portfolio
 
 ## Please first specify the directory of portfolio pickle file you want to investigate
-The directory is in format of *'../strategy_name/simulation_specifications/variable_specifications'*.
-Eg. `directory='../RSI/Pickle_day_longshort2/w0_p5'`
-
+The directory is in format of *'../strategy_name/simulation_specifications/variable_specifications'*.<br>
+```python
+directory='../RSI/Pickle_day_longshort2/w0_p5'
+```
 **For RSI strategies**
 * strategy_name = 'RSI'
 * simulation_specifications can = 
@@ -26,6 +27,29 @@ Eg. `directory='../RSI/Pickle_day_longshort2/w0_p5'`
 * variable_specifications = 'rX_pY'
     * where X, the sigma ratio, can be any number in [0.1, 0.2, ..., 1.0]
     * where Y, SMA window size, can be any integer number in range [5,60]
-    
+
 ## To load a previous portfolio
+```python
+a=Portfolio(initial_capital=1000000, commission_rate=17.5, portfolio_name='MeanReversion')
 a.load(directory)
+```
+## To see performance statistics
+```python
+a.statistics
+```
+## To see historical aggregated PnL information
+```python
+a.historical
+```
+## To see all historical trades
+```python
+a.trades
+```
+## To see trades summary
+```python
+a.tradesum
+```
+## To export all information into xlsx. format
+```python
+a.output_excel(directory)
+```
