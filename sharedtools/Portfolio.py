@@ -399,6 +399,14 @@ class Portfolio(object):
     
     
     def output_excel(self,directory):
+        
+        '''
+        Save all information from a pickle file to a Excelsheet in the same folder.
+        
+        :param directory: full directory to load the object, excluding format (.pkl)
+        :type directory: str
+        '''
+        
         savedict= pickle.load(open(directory+".pkl","rb"))
         info=pd.DataFrame.from_dict(savedict['Others'],orient='index')
         info.loc['Portfolio Name']=savedict['Portfolio Name']
