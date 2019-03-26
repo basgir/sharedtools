@@ -1,3 +1,7 @@
+- Installation
+- How to build a portfolio
+- How to view an existing portfolio
+
 # Installation 
 ```python
 pip install git+https://github.com/swissborgcanada/sharedtools
