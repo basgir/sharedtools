@@ -311,6 +311,7 @@ class Portfolio(object):
             self.statistics['Time Series']['STD ANN']=std_ann
             self.statistics['Time Series']['Max Drawdown']=mdd
             self.statistics['Time Series']['Sharpe Ratio']=SR
+            self.statistics['Time Series']['t Statistics']=t
             
             if self.benchmark is not None:
                 total_ret_bm=self.benchmark.Benchmark.iloc[-1]/self.benchmark.Benchmark[0]-1
@@ -332,6 +333,7 @@ class Portfolio(object):
             print(f'Total Return: {round(total_ret*100,2)}% across {duration} years')
             print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann} Sharpe Ratio: {SR}')
             print(f'Max Drawdown: {round(mdd*100,2)} %')
+            print(f't-Statistics: {t}')
             plt.plot(self.historical.NAV, linewidth=0.8)
             plt.show()
         
