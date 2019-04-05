@@ -292,7 +292,7 @@ class Portfolio(object):
             std_ann=round(np.std(returns)*np.sqrt(annualized_ratio),2)
             mdd=self.historical.Drawdown.min()
             SR=CAGR/std_ann
-            t=np.sqrt(len(returns)) * returns.mean()/returns.std()
+            t=np.sqrt(len(returns)) * np.mean(returns)/np.std(returns)
 
             
             self.statistics['Trades']={}
