@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+# To visualize trades
 
 from sharedtools.Portfolio import Portfolio
 import pandas as pd
@@ -64,4 +65,51 @@ def visualize_trade(portfolio_directory):
     print (a.statistics)
     
     
+# surface plot
+def list_files(directory, extension):
+    return (f for f in listdir(directory) if f.endswith('.' + extension))
+
+def surface_plot(strategy_name,data_folder_directory,X_name,Y_name,Z_name,Z_type):
+
+    #setup
+    plt.rc('font', family='TT Commons')
+    plt.rcParams['axes.labelweight'] = 'bold'
+    plt.rcParams['legend.fontsize']= 15
+    plt.rcParams['axes.labelsize'] = 13
+    plt.rcParams['axes.titlesize'] = 13
+    plt.rcParams['axes.titleweight'] = "bold"
+    plt.rcParams['xtick.labelsize'] = 15
+    plt.rcParams['ytick.labelsize'] = 15
+    sbcolA = "#01C38D"
+    sbcolC = "#EDEFF1"
+    sbcolB = "#191E29"
+    warnings.filterwarnings("ignore")
+    show_axis = False
+
+
+    #data
+    X=[]
+    Y=[]
+    Z=[]
+    pickles = list_files(data_folder_directory,'pkl')
+    for p in pickles:
+        filename=f'{data_folder_directory}/{p}'
+        a=Portfolio(initial_capital=1000000, commission_rate=0, portfolio_name='SurfacePlot')
+        a.load(filename[:-4])
+        X.append(a.others[X_name])
+        Y.append(a.others[Y_name])
+        Z.append(a.statistics[Z_type][Z_name])
+
+    df = pd.DataFrame({X_name:X,Y_name:Y,Z_name:Z})
+
+    #plot
+#     plt.close("all")
+    fig = plt.figure(figsize=plt.figaspect(0.5))
+    ax = fig.add_subplot(111,projection='3d')
+    ax.plot_trisurf(df[X_name], df[Y_name], df[Z_name], cmap=plt.cm.Greens, linewidth=0.2)
+    ax.set_xlabel(X_name)
+    ax.set_ylabel(Y_name)
+    ax.set_zlabel(Z_name)
+    ax.set_title(strategy_name)
+    plt.show()
 
