@@ -237,7 +237,7 @@ class Portfolio(object):
         self.historical.at[index,self.historical.columns.tolist()]=[date,pos_value,self.cash,r_pnl,
                                                                   u_pnl,self.nav,npos,dd]
     
-    def calculate_stats(self,annualized_ratio,print='Yes',form='dict'):#per simulation
+    def calculate_stats(self,annualized_ratio,printing='Yes',form='dict'):#per simulation
         
         '''
         Calculate performance statistics of the simulation.
@@ -323,7 +323,7 @@ class Portfolio(object):
                 self.statistics['Benchmark']['Information Ratio']=IR
                 
          
-            if print=='yes':
+            if printing=='yes':
                 print('- Trade Analysis:')
                 print(f"Total Trades: {total_trades} Total Pnl: {total_pnl} Average PnL per Trade: {avg_trade_pnl}")
                 print(f"Total Realized Pnl: {r_pnl} Total Unrealized Pnl: {u_pnl} \
