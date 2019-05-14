@@ -237,7 +237,7 @@ class Portfolio(object):
         self.historical.at[index,self.historical.columns.tolist()]=[date,pos_value,self.cash,r_pnl,
                                                                   u_pnl,self.nav,npos,dd]
     
-    def calculate_stats(self,annualized_ratio,form='dict'):#per simulation
+    def calculate_stats(self,annualized_ratio,print='Yes',form='dict'):#per simulation
         
         '''
         Calculate performance statistics of the simulation.
@@ -323,21 +323,21 @@ class Portfolio(object):
                 self.statistics['Benchmark']['Information Ratio']=IR
                 
          
-        
-            print('- Trade Analysis:')
-            print(f"Total Trades: {total_trades} Total Pnl: {total_pnl} Average PnL per Trade: {avg_trade_pnl}")
-            print(f"Total Realized Pnl: {r_pnl} Total Unrealized Pnl: {u_pnl} \
-                  Total Commission Expense: {total_commission}")
-            print(f'Winning Rate: {round(p_win*100,2)}% Lossing Rate: {round(p_loss*100,2)}%')
-            
-            print('- Time Series Analysis:')
-            print(f'Starting NAV: {self.initial_capital} Ending NAV: {self.nav}')
-            print(f'Total Return: {round(total_ret*100,2)}% across {duration} years')
-            print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann} Sharpe Ratio: {SR}')
-            print(f'Max Drawdown: {round(mdd*100,2)} %')
-            print(f't-Statistics: {t}')
-            plt.plot(self.historical.NAV, linewidth=0.8)
-            plt.show()
+            if print=='yes':
+                print('- Trade Analysis:')
+                print(f"Total Trades: {total_trades} Total Pnl: {total_pnl} Average PnL per Trade: {avg_trade_pnl}")
+                print(f"Total Realized Pnl: {r_pnl} Total Unrealized Pnl: {u_pnl} \
+                      Total Commission Expense: {total_commission}")
+                print(f'Winning Rate: {round(p_win*100,2)}% Lossing Rate: {round(p_loss*100,2)}%')
+
+                print('- Time Series Analysis:')
+                print(f'Starting NAV: {self.initial_capital} Ending NAV: {self.nav}')
+                print(f'Total Return: {round(total_ret*100,2)}% across {duration} years')
+                print(f'CAGR: {round(CAGR*100,2)}% ST DEV ANN: {std_ann} Sharpe Ratio: {SR}')
+                print(f'Max Drawdown: {round(mdd*100,2)} %')
+                print(f't-Statistics: {t}')
+                plt.plot(self.historical.NAV, linewidth=0.8)
+                plt.show()
         
         
     def get_position(self,ticker):
