@@ -82,8 +82,8 @@ class Portfolio(object):
         :type margin: float
         
         '''
-        
-        if ticker not in self.portfolio.Ticker.values:#new open
+        # new open
+        if ticker not in self.portfolio.Ticker.values:
             comm = abs(float(quantity*price*self.commission_rate)/10000)
             self.cash -= price*quantity+comm
             self.trades.at[len(self.trades),
@@ -94,6 +94,11 @@ class Portfolio(object):
                                                                quantity*price,price,quantity*price,-comm,0,np.nan]
 #             self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity,price,quantity*price,price,
 #                                                      quantity*price,0,0,np.nan]
+        
+    
+    
+    
+    
         else:#update
             pf_last=self.portfolio.loc[self.portfolio.Ticker==ticker]
             quantity_last=float(pf_last.Quantity)
@@ -101,7 +106,9 @@ class Portfolio(object):
             avg_open=float(pf_last.Avg_Open_Price)
             r_pnl_last=float(pf_last.Realized_Pnl)
             
-            if quantity_last*quantity_now <0:#position flip
+            #position flip
+            if quantity_last*quantity_now <0:
+                
                 #part close
                 quantity_mid=0
                 comm = abs(float((quantity_mid-quantity_last)*price*self.commission_rate)/10000)
@@ -133,11 +140,18 @@ class Portfolio(object):
                                                                     price,quantity_rest*price,-comm,0,np.nan]
 #                 self.portfolio.loc[len(self.portfolio)]=[date,ticker,quantity_rest,price,quantity_rest*price,
 #                                                          price,quantity_rest*price,0,0,np.nan]
-            elif abs(quantity_now)<abs(quantity_last):#close
+            
+        
+            
+            
+            #close
+            elif abs(quantity_now)<abs(quantity_last):
                 comm = abs(float((quantity_now-quantity_last)*price*self.commission_rate)/10000)
                 self.cash -= price*quantity+comm
                 r_pnl=quantity*(avg_open-price)-comm
-                if quantity_now==0:#full close
+                
+                #full close
+                if quantity_now==0:
                     self.trades.at[len(self.trades),
                                    self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Close']
 #                     self.trades.loc[len(self.trades)]=[date,ticker,quantity,price,comm,margin,'Close']
@@ -150,7 +164,8 @@ class Portfolio(object):
 #                                                            r_pnl_last+r_pnl,date,np.nan]
                     self.portfolio=self.portfolio[self.portfolio.Ticker!=ticker].reset_index(drop=True)
                 
-                else:#partial close
+                #partial close
+                else:
                     u_pnl=-quantity_now*(avg_open-price)
                     self.trades.at[len(self.trades),
                                    self.trades.columns.tolist()]=[date,ticker,quantity,price,comm,margin,'Close']
@@ -166,8 +181,10 @@ class Portfolio(object):
 #                                         'Outlay','Realized_Pnl','Unrealized_Pnl']]=\
 #                                        quantity_now,price,quantity_now*price,\
 #                                        float(pf_last.Outlay)+quantity*price,r_pnl_last+r_pnl,u_pnl
-                    
-            else:#further open
+            
+    
+            #further open
+            else:
                 comm = abs(float(quantity*price*self.commission_rate)/10000)
                 self.cash -= price*quantity+comm
                 u_pnl=-quantity_last*(avg_open-price)
