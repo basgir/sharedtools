@@ -93,12 +93,12 @@ class Portfolio(object):
         comm = round_down(abs(open_notional_value * self.commission_rate))
 
         trade_sum = self.tradesum.loc[self.tradesum.position_id == position_id]
-        open_quantity = trade_sum['open_quantity'][0]
-        open_notional = trade_sum['open_notional'][0]
-        close_quantity = trade_sum['close_quantity'][0]
-        curr_commission = trade_sum['commission'][0]
-        curr_r_pnl = trade_sum['realized_pnl'][0]
-        ticker = trade_sum['ticker'][0]
+        open_quantity = trade_sum['open_quantity'].tolist()[0]
+        open_notional = trade_sum['open_notional'].tolist()[0]
+        close_quantity = trade_sum['close_quantity'].tolist()[0]
+        curr_commission = trade_sum['commission'].tolist()[0]
+        curr_r_pnl = trade_sum['realized_pnl'].tolist()[0]
+        ticker = trade_sum['ticker'].tolist()[0]
 
         new_open_notional = open_notional + price * abs(quantity)
         new_open_quantity = open_quantity + quantity
@@ -127,12 +127,12 @@ class Portfolio(object):
         self.cash += (close_notional_value - close_comm)
 
         trade_sum = self.tradesum.loc[self.tradesum.position_id == position_id]
-        commission = trade_sum['commission'][0]
-        r_pnl = trade_sum['realized_pnl'][0]
-        close_notional = trade_sum['close_notional'][0]
-        close_quantity = trade_sum['close_quantity'][0]
-        avg_open_price = trade_sum['open_price'][0]
-        ticker = trade_sum['ticker'][0]
+        commission = trade_sum['commission'].tolist()[0]
+        r_pnl = trade_sum['realized_pnl'].tolist()[0]
+        close_notional = trade_sum['close_notional'].tolist()[0]
+        close_quantity = trade_sum['close_quantity'].tolist()[0]
+        avg_open_price = trade_sum['open_price'].tolist()[0]
+        ticker = trade_sum['ticker'].tolist()[0]
 
         new_close_notional = close_notional + price * abs(quantity)
         new_close_quantity = close_quantity + quantity
@@ -161,10 +161,10 @@ class Portfolio(object):
         self._close_position(position_id, date, price, quantity, margin)
 
         trade_sum = self.tradesum.loc[self.tradesum.position_id == position_id]
-        curr_r_pnl = trade_sum['realized_pnl'][0]
-        average_open_price = trade_sum['open_price'][0]
-        open_quantity = trade_sum['open_quantity'][0]
-        close_quantity = trade_sum['close_quantity'][0]
+        curr_r_pnl = trade_sum['realized_pnl'].tolist()[0]
+        average_open_price = trade_sum['open_price'].tolist()[0]
+        open_quantity = trade_sum['open_quantity'].tolist()[0]
+        close_quantity = trade_sum['close_quantity'].tolist()[0]
         curr_holding_qty = open_quantity + close_quantity
 
         self.holding.loc[self.holding.position_id == position_id,
@@ -191,8 +191,9 @@ class Portfolio(object):
 
         else:  # update
             ticker_holding = self.holding.loc[self.holding.ticker == ticker]
-            position_id = ticker_holding.position_id[0]
-            curr_holding_qty = float(ticker_holding.quantity)
+            position_id = ticker_holding.position_id.tolist()[0]
+
+            curr_holding_qty = float(ticker_holding.quantity.tolist()[0])
             new_qty = curr_holding_qty + quantity
 
             if curr_holding_qty * new_qty < 0:  # position flip
