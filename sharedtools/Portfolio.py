@@ -283,11 +283,12 @@ class Portfolio(object):
         # trades
         total_trades = len(self.trades)
 
-        r_pnl = self.holding.realized_pnl.sum() + self.tradesum.realized_pnl.sum()
+        r_pnl = self.tradesum.realized_pnl.sum()
         u_pnl = self.holding.unrealized_pnl.sum()
 
         total_pnl = r_pnl + u_pnl
-        pnls = self.tradesum.realized_pnl.tolist() + self.holding.realized_pnl.tolist()
+        pnls = self.tradesum[abs(self.tradesum.open_quantity) == abs(self.tradesum.close_quantity)].realized_pnl.tolist() \
+               + (self.holding.realized_pnl + self.holding.unrealized_pnl).tolist()
         total_commission = self.trades.commission.sum()
         try:
             avg_trade_pnl = total_pnl / total_trades
@@ -302,7 +303,8 @@ class Portfolio(object):
             total_ret = self.historical.nav.iloc[-1] / self.historical.nav.iloc[0] - 1
 
             duration = (self.historical.datetime.iloc[-1] -
-                        self.historical.datetime.iloc[1]) / datetime.timedelta(days=1) / 365
+                        self.historical.datetime.iloc[0]) / datetime.timedelta(days=1) / 365
+
             # Compund annual growth rate
             CAGR = ((self.total_nav / self.cash) ** (1 / duration)) - 1
             std_ann = round(np.std(returns) * np.sqrt(annualized_ratio), 2)
@@ -374,9 +376,10 @@ class Portfolio(object):
             directory: file path
         """
         save_dict = {
-            'initial_capital': self.cash,
-            'nav': self.total_nav,
-            'total_cash': self.cash,
+            'portfolio_name': self.portfolio_name,
+            'initial_cash': self.initial_cash,
+            'total_nav': self.total_nav,
+            'cash': self.cash,
             'commission_rate': self.commission_rate,
             'benchmark': self.benchmark,
             'trades': self.trades.to_json(orient='records'),
@@ -401,9 +404,9 @@ class Portfolio(object):
             portfolio = Portfolio(0, 0)
             loaded_dict = json.load(fp)
             portfolio.portfolio_name = loaded_dict['portfolio_name']
-            portfolio.cash = loaded_dict['initial_capital']
-            portfolio.nav = loaded_dict['nav']
-            portfolio.cash = loaded_dict['total_cash']
+            portfolio.initial_cash = loaded_dict['initial_cash']
+            portfolio.total_nav = loaded_dict['total_nav']
+            portfolio.cash = loaded_dict['cash']
             portfolio.commission_rate = loaded_dict['commission_rate']
             portfolio.benchmark = loaded_dict['benchmark']
 
