@@ -75,7 +75,7 @@ class Portfolio(object):
             [position_id, date, ticker, quantity, price, comm, margin, 'open']
         self.trade_count += 1
 
-        self.tradesum.at[len(self.holding),
+        self.tradesum.at[len(self.tradesum),
                          ['position_id', 'ticker',
                           'open_quantity', 'open_price', 'open_notional', 'open_date',
                           'close_quantity', 'close_price', 'close_notional', 'close_date',
