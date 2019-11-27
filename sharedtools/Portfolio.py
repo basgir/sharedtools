@@ -185,7 +185,7 @@ class Portfolio(object):
         quantity: quantity of the trade
         margin: margin rate% of the trade,  not in use yet
         """
-
+        ticker = ticker.upper()
         if ticker not in self.holding.ticker.values:  # new open
             self._open_new_position(date, price, ticker, quantity, margin)
 
@@ -221,7 +221,7 @@ class Portfolio(object):
         """
         # Update
         ticker = ticker.upper()
-        if ticker.upper() in self.holding.values:
+        if ticker.upper() in self.holding.ticker.values:
             holding_index = self.holding.index[self.holding.ticker == ticker][0]
             position_id = self.holding.at[holding_index, 'position_id']
 
