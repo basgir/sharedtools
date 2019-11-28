@@ -306,7 +306,7 @@ class Portfolio(object):
                         self.historical.datetime.iloc[0]) / datetime.timedelta(days=1) / 365
 
             # Compund annual growth rate
-            CAGR = ((self.total_nav / self.cash) ** (1 / duration)) - 1
+            CAGR = ((self.total_nav / self.initial_cash) ** (1 / duration)) - 1
             std_ann = round(np.std(returns) * np.sqrt(annualized_ratio), 2)
             mdd = self.historical.drawdown.min()
             SR = CAGR / std_ann
@@ -329,7 +329,7 @@ class Portfolio(object):
         self.statistics['trades']['lossing_rate'] = p_loss
         self.statistics['trades']['winning_rate'] = p_win
         self.statistics['time_series'] = {}
-        self.statistics['time_series']['starting_nav'] = self.cash
+        self.statistics['time_series']['starting_nav'] = self.initial_cash
         self.statistics['time_series']['ending_nav'] = self.total_nav
         self.statistics['time_series']['total_return'] = total_ret
         self.statistics['time_series']['duration'] = duration
