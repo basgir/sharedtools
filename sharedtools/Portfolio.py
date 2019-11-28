@@ -302,15 +302,15 @@ class Portfolio(object):
         if len(self.historical) > 1:
             total_ret = self.historical.nav.iloc[-1] / self.historical.nav.iloc[0] - 1
 
-            duration = (self.historical.datetime.iloc[-1] -
-                        self.historical.datetime.iloc[0]) / datetime.timedelta(days=1) / 365
+            duration = round((self.historical.datetime.iloc[-1] -
+                        self.historical.datetime.iloc[0]) / datetime.timedelta(days=1) / 365, 4)
 
             # Compund annual growth rate
             CAGR = ((self.total_nav / self.initial_cash) ** (1 / duration)) - 1
-            std_ann = round(np.std(returns) * np.sqrt(annualized_ratio), 2)
+            std_ann = round(np.std(returns) * np.sqrt(annualized_ratio), 4)
             mdd = self.historical.drawdown.min()
-            SR = CAGR / std_ann
-            t = np.sqrt(len(returns)) * np.mean(returns) / np.std(returns)
+            SR = round(CAGR / std_ann, 4)
+            t = round(np.sqrt(len(returns)) * np.mean(returns) / np.std(returns), 4)
 
         else:
             total_ret = duration = CAGR = std_ann = mdd = SR = t = 0
